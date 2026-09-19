@@ -1,0 +1,55 @@
+sources:
+  - name: OpenAI News
+    url: https://openai.com/news/rss.xml
+    type: rss
+    weight: 5
+
+  - name: Anthropic News
+    url: https://www.anthropic.com/news
+    type: html
+    weight: 5
+
+  - name: Google DeepMind Blog
+    url: https://deepmind.google/blog/rss.xml
+    type: rss
+    weight: 5
+
+  - name: Google AI Blog
+    url: https://blog.google/technology/ai/rss/
+    type: rss
+    weight: 4
+
+  - name: Microsoft Azure Blog
+    url: https://azure.microsoft.com/en-us/blog/feed/
+    type: rss
+    weight: 4
+
+  - name: Meta AI Blog
+    url: https://ai.meta.com/blog/
+    type: html
+    weight: 4
+
+  - name: NVIDIA Blog - AI
+    url: https://blogs.nvidia.com/blog/category/deep-learning/feed/
+    type: rss
+    weight: 3
+
+  - name: Hugging Face Blog
+    url: https://huggingface.co/blog/feed.xml
+    type: rss
+    weight: 4
+
+  - name: arXiv cs.AI
+    url: https://export.arxiv.org/rss/cs.AI
+    type: rss
+    weight: 3
+
+  - name: arXiv cs.CL
+    url: https://export.arxiv.org/rss/cs.CL
+    type: rss
+    weight: 3
+
+  - name: GitHub Trending Python
+    url: https://github.com/trending/python?since=daily
+    type: html
+    weight: 2

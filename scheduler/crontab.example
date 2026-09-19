@@ -1,0 +1,4 @@
+# Run every day at 08:00 server local time.
+# Edit /Users/yiqing.yang4/AI资讯获取 if you copy the project elsewhere.
+0 8 * * * /Users/yiqing.yang4/AI资讯获取/scripts/run_once.sh >> /Users/yiqing.yang4/AI资讯获取/logs/cron.log 2>&1
+
