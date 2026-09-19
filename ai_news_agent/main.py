@@ -37,10 +37,14 @@ def run() -> Path:
     sources = load_sources(PROJECT_ROOT / "config" / "sources.yaml")
     tz = ZoneInfo(settings.report.get("timezone", "Asia/Shanghai"))
     now = datetime.now(tz)
-    target_date = (now - timedelta(days=1)).date()
-    report_date = target_date.isoformat()
-    window_start = datetime.combine(target_date, time.min, tzinfo=tz)
-    window_end = window_start + timedelta(days=1)
+    # Report for the day the run happens. lookback_days=N covers the last N
+    # calendar days in the configured timezone, ending at the run moment.
+    lookback_days = max(1, settings.lookback_days)
+    report_date = now.date().isoformat()
+    window_start = datetime.combine(now.date(), time.min, tzinfo=tz) - timedelta(
+        days=lookback_days - 1
+    )
+    window_end = now
 
     setup_logging(PROJECT_ROOT / "logs" / "agent.log")
     logging.info("starting AI news run for report_date=%s", report_date)
