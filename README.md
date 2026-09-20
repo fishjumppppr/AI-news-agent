@@ -113,9 +113,9 @@ crontab -e
 
 ## 当前资讯来源
 
-全部来源定义在 `config/sources.yaml`，当前共 **11 个**：
+全部来源定义在 `config/sources.yaml`，当前共 **15 个**，分为官方源、社区源和搜索/API 源：
 
-| 来源 | 类型 | 权重 | 地址 |
+| 来源 | 类型 | 权重 | 地址/接口 |
 | --- | --- | --- | --- |
 | OpenAI News | rss | 5 | https://openai.com/news/rss.xml |
 | Anthropic News | html | 5 | https://www.anthropic.com/news |
@@ -128,14 +128,22 @@ crontab -e
 | arXiv cs.AI | rss | 3 | https://export.arxiv.org/rss/cs.AI |
 | arXiv cs.CL | rss | 3 | https://export.arxiv.org/rss/cs.CL |
 | GitHub Trending Python | html | 2 | https://github.com/trending/python?since=daily |
+| Google News - AI Agents | google_news_rss | 3 | Google News RSS search |
+| GDELT - AI Agents | gdelt | 2 | https://api.gdeltproject.org/api/v2/doc/doc |
+| Hacker News - AI Agents | hackernews | 2 | https://hn.algolia.com/api/v1/search_by_date |
+| GitHub Search - Agent Projects | github_search | 2 | https://api.github.com/search/repositories |
 
 说明：
 
 - `rss`：用 feedparser 直接解析 RSS/Atom。
 - `html`：抓列表页再抽取文章链接；GitHub Trending 有单独适配器（解析 `article.Box-row`），取出仓库名和简介。
+- `google_news_rss`：用 Google News RSS 搜索补充官方源之外的新闻报道。
+- `gdelt`：用 GDELT Doc API 搜索全球新闻；该接口有频率限制，遇到 429 会跳过本次来源。
+- `hackernews`：用 Hacker News Algolia API 搜索社区讨论和 Show HN/Launch HN 项目。
+- `github_search`：用 GitHub Search API 搜索近期更新的 AI/LLM agent 项目。
 - `weight`：只影响候选排序（权重高的排前面），不改变抓取范围。
 - 抓取结果只是候选，还要过 `config/settings.yaml` 的日期窗口（`lookback_days`）和 `keywords` 过滤；标题、摘要、正文都不含关键词的条目会被丢弃。
-- 已知问题：arXiv 两个源目前返回 200 但 channel 为空（arXiv 侧行为），实际不产出条目，可考虑换成其它 arXiv 订阅地址。
+- Bing News Search 需要 Azure API key，`.env.example` 已预留 `BING_NEWS_API_KEY`，默认未启用。
 
 ## 5. 修改来源
 

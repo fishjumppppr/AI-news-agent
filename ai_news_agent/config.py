@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -13,6 +13,8 @@ class Source:
     url: str
     type: str
     weight: int = 1
+    query: Optional[str] = None
+    limit: int = 20
 
 
 @dataclass(frozen=True)
