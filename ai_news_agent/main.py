@@ -19,6 +19,13 @@ from .summarize import build_prompt, summarize_with_litellm
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
+def display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
+
+
 def setup_logging(log_file: Path) -> None:
     log_file.parent.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(
@@ -75,8 +82,8 @@ def run() -> Path:
         content = fallback_report(enriched, report_date, exc)
 
     path = write_report(PROJECT_ROOT / "data" / "reports", report_date, content)
-    logging.info("wrote report: %s", path)
-    pushed_to = push_webhook(content, path)
+    logging.info("wrote report: %s", display_path(path))
+    pushed_to = push_webhook(content, path, PROJECT_ROOT)
     if pushed_to:
         logging.info("pushed report to webhook: %s", pushed_to)
     return path
@@ -86,10 +93,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch and summarize AI/Agent news.")
     parser.add_argument("--once", action="store_true", help="Run once and exit.")
     args = parser.parse_args()
-    if args.once:
-        print(run())
-    else:
-        print(run())
+    path = run()
+    print(display_path(path))
 
 
 if __name__ == "__main__":
