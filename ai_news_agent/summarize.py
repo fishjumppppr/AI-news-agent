@@ -58,9 +58,11 @@ def build_prompt(items: List[NewsItem], report_date: str) -> str:
 def summarize_with_litellm(prompt: str) -> str:
     base_url = os.environ.get("LITELLM_BASE_URL", "http://127.0.0.1:4000").rstrip("/")
     api_key = os.environ.get("LITELLM_API_KEY")
-    model = os.environ.get("LITELLM_MODEL", "gpt-4o-mini")
+    model = os.environ.get("LITELLM_MODEL")
     if not api_key:
         raise RuntimeError("Missing LITELLM_API_KEY. Copy .env.example to .env and fill it.")
+    if not model:
+        raise RuntimeError("Missing LITELLM_MODEL. Set it to a model name allowed by your LiteLLM proxy.")
 
     response = requests.post(
         chat_completions_url(base_url),

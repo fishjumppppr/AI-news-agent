@@ -19,7 +19,7 @@ scripts/run_once.sh   单次运行脚本
 ## 1. 配置 LiteLLM 代理
 
 ```bash
-cd /Users/yangyiqing/AI-news-agent
+cd AI-news-agent
 cp .env.example .env
 ```
 
@@ -28,18 +28,18 @@ cp .env.example .env
 ```dotenv
 LITELLM_BASE_URL=http://127.0.0.1:4000
 LITELLM_API_KEY=sk-your-litellm-proxy-key
-LITELLM_MODEL=deepseek-v4-flash
+LITELLM_MODEL=your-litellm-model-name
 WEBHOOK_URL=
 ```
 
 如果 LiteLLM 代理部署在 VPS 上，把 `LITELLM_BASE_URL` 改成你的 HTTPS 地址。
 `LITELLM_BASE_URL` 可以写根地址，也可以写到 `/v1`，程序会自动拼接正确的 chat completions 路径。
-模型名要使用代理允许的名称；例如你的代理可用 `deepseek-v4-flash`，不要写成 `openai/deepseek-v4-flash-0731`。
+模型名要使用代理允许的名称；不同 LiteLLM 代理暴露的模型名可能不同，请以你的代理后台或 `/models` 返回为准。
 
 可以先运行 LiteLLM 连通性测试：
 
 ```bash
-/Users/yangyiqing/AI-news-agent/.venv/bin/python -m pytest -s tests/test_litellm_connection.py
+.venv/bin/python -m pytest -s tests/test_litellm_connection.py
 ```
 
 Webhook 请求体：
@@ -49,20 +49,20 @@ Webhook 请求体：
   "title": "2026-09-17",
   "text": "Markdown 日报内容",
   "html": "<!doctype html>...",
-  "report_path": "/Users/yangyiqing/AI-news-agent/data/reports/2026-09-17.html"
+  "report_path": "/absolute/path/to/AI-news-agent/data/reports/2026-09-17.html"
 }
 ```
 
 ## 2. 单次运行
 
 ```bash
-/Users/yangyiqing/AI-news-agent/scripts/run_once.sh
+./scripts/run_once.sh
 ```
 
 生成结果按运行当天日期命名，写入：
 
 ```text
-/Users/yangyiqing/AI-news-agent/data/reports/YYYY-MM-DD.html
+data/reports/YYYY-MM-DD.html
 ```
 
 `YYYY-MM-DD` 是运行当天的日期（时区取 `config/settings.yaml` 里的 `report.timezone`，默认 `Asia/Shanghai`）。抓取窗口默认是「运行当天 00:00 → 本次运行时刻」；如果 `lookback_days` 设为 N，窗口起点再向前多覆盖 N-1 天。
@@ -72,7 +72,7 @@ Webhook 请求体：
 运行日志会写入：
 
 ```text
-/Users/yangyiqing/AI-news-agent/logs/agent.log
+logs/agent.log
 ```
 
 如果 LiteLLM 不可用，程序仍会输出一份 fallback HTML，包含已抓取的候选资讯和错误原因。
@@ -82,8 +82,9 @@ Webhook 请求体：
 加载示例 plist：
 
 ```bash
-cp /Users/yangyiqing/AI-news-agent/scheduler/com.yiqing.ai-news-agent.plist ~/Library/LaunchAgents/
-launchctl load ~/Library/LaunchAgents/com.yiqing.ai-news-agent.plist
+PROJECT_DIR="$(pwd)"
+sed "s#__PROJECT_DIR__#${PROJECT_DIR}#g" scheduler/com.example.ai-news-agent.plist.template > ~/Library/LaunchAgents/com.example.ai-news-agent.plist
+launchctl load ~/Library/LaunchAgents/com.example.ai-news-agent.plist
 ```
 
 默认每天 08:00 运行。
@@ -91,7 +92,7 @@ launchctl load ~/Library/LaunchAgents/com.yiqing.ai-news-agent.plist
 停止：
 
 ```bash
-launchctl unload ~/Library/LaunchAgents/com.yiqing.ai-news-agent.plist
+launchctl unload ~/Library/LaunchAgents/com.example.ai-news-agent.plist
 ```
 
 ## 4. Linux / VPS 定时运行
@@ -105,7 +106,7 @@ crontab -e
 添加：
 
 ```cron
-0 8 * * * /Users/yangyiqing/AI-news-agent/scripts/run_once.sh >> /Users/yangyiqing/AI-news-agent/logs/cron.log 2>&1
+0 8 * * * /absolute/path/to/AI-news-agent/scripts/run_once.sh >> /absolute/path/to/AI-news-agent/logs/cron.log 2>&1
 ```
 
 如果部署到 VPS，请把路径改成服务器上的项目路径。
@@ -145,3 +146,21 @@ config/sources.yaml
 ```
 
 可以增删 RSS 源。GitHub Trending 目前用 HTML 抽取，其它普通网页后续可以继续加适配器。
+
+## 6. 迁移到新机器或 VPS
+
+```bash
+git clone git@github.com:fishjumppppr/AI-news-agent.git
+cd AI-news-agent
+cp .env.example .env
+```
+
+然后编辑 `.env`，填入新环境的 `LITELLM_BASE_URL`、`LITELLM_API_KEY`、`LITELLM_MODEL`。
+
+运行：
+
+```bash
+./scripts/run_once.sh
+```
+
+项目代码不依赖固定安装路径；只有系统定时任务需要使用该机器上的绝对路径。

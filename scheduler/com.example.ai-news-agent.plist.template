@@ -4,11 +4,11 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.yiqing.ai-news-agent</string>
+  <string>com.example.ai-news-agent</string>
 
   <key>ProgramArguments</key>
   <array>
-    <string>/Users/yiqing.yang4/AI资讯获取/scripts/run_once.sh</string>
+    <string>__PROJECT_DIR__/scripts/run_once.sh</string>
   </array>
 
   <key>StartCalendarInterval</key>
@@ -20,13 +20,12 @@
   </dict>
 
   <key>StandardOutPath</key>
-  <string>/Users/yiqing.yang4/AI资讯获取/logs/launchd.out.log</string>
+  <string>__PROJECT_DIR__/logs/launchd.out.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/yiqing.yang4/AI资讯获取/logs/launchd.err.log</string>
+  <string>__PROJECT_DIR__/logs/launchd.err.log</string>
 
   <key>WorkingDirectory</key>
-  <string>/Users/yiqing.yang4/AI资讯获取</string>
+  <string>__PROJECT_DIR__</string>
 </dict>
 </plist>
-
