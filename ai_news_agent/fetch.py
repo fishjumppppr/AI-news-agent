@@ -19,6 +19,7 @@ class NewsItem:
     title: str
     url: str
     source: str
+    source_type: str
     source_weight: int
     published_at: Optional[datetime]
     summary: str = ""
@@ -67,6 +68,7 @@ def fetch_rss(source: Source, settings: Settings) -> List[NewsItem]:
                 title=title,
                 url=link,
                 source=source.name,
+                source_type=source.type,
                 source_weight=source.weight,
                 published_at=published,
                 summary=summary,
@@ -99,6 +101,7 @@ def fetch_github_trending(source: Source, settings: Settings) -> List[NewsItem]:
                 title=title,
                 url=href,
                 source=source.name,
+                source_type=source.type,
                 source_weight=source.weight,
                 published_at=None,
                 summary=desc,
@@ -141,6 +144,7 @@ def fetch_blog_index(source: Source, settings: Settings) -> List[NewsItem]:
                 title=text[:180],
                 url=key,
                 source=source.name,
+                source_type=source.type,
                 source_weight=source.weight,
                 published_at=None,
                 summary=text,
@@ -192,6 +196,7 @@ def fetch_gdelt(source: Source, settings: Settings) -> List[NewsItem]:
                 title=title,
                 url=url,
                 source=source.name,
+                source_type=source.type,
                 source_weight=source.weight,
                 published_at=published,
                 summary=summary,
@@ -230,6 +235,7 @@ def fetch_hackernews(source: Source, settings: Settings) -> List[NewsItem]:
                 title=title,
                 url=url,
                 source=source.name,
+                source_type=source.type,
                 source_weight=source.weight,
                 published_at=published,
                 summary=summary,
@@ -273,6 +279,7 @@ def fetch_github_search(source: Source, settings: Settings) -> List[NewsItem]:
                 title=full_name,
                 url=html_url,
                 source=source.name,
+                source_type=source.type,
                 source_weight=source.weight,
                 published_at=published,
                 summary=summary,
@@ -308,6 +315,7 @@ def fetch_sources(sources: Iterable[Source], settings: Settings) -> List[NewsIte
                     title=f"[抓取失败] {source.name}",
                     url=source.url,
                     source=source.name,
+                    source_type=source.type,
                     source_weight=0,
                     published_at=None,
                     summary=str(exc),
@@ -319,6 +327,7 @@ def fetch_sources(sources: Iterable[Source], settings: Settings) -> List[NewsIte
                     title=f"[抓取失败] {source.name}",
                     url=source.url,
                     source=source.name,
+                    source_type=source.type,
                     source_weight=0,
                     published_at=None,
                     summary=str(exc),

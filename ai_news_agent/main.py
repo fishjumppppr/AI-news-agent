@@ -65,6 +65,8 @@ def run() -> Path:
         window_end=window_end,
         keywords=settings.keywords,
         max_items=settings.max_items,
+        max_items_per_source=settings.max_items_per_source,
+        max_items_per_source_type=settings.max_items_per_source_type,
     )
     logging.info("kept %s filtered items", len(filtered))
 

@@ -22,6 +22,8 @@ class Settings:
     lookback_days: int
     max_items: int
     max_enriched_items: int
+    max_items_per_source: int
+    max_items_per_source_type: int
     max_article_chars: int
     request_timeout_seconds: int
     user_agent: str
@@ -45,6 +47,8 @@ def load_settings(path: Path) -> Settings:
         lookback_days=int(data.get("lookback_days", 1)),
         max_items=int(data.get("max_items", 40)),
         max_enriched_items=int(data.get("max_enriched_items", 12)),
+        max_items_per_source=int(data.get("max_items_per_source", 8)),
+        max_items_per_source_type=int(data.get("max_items_per_source_type", 16)),
         max_article_chars=int(data.get("max_article_chars", 3000)),
         request_timeout_seconds=int(data.get("request_timeout_seconds", 20)),
         user_agent=str(data.get("user_agent", "ai-news-agent/0.1")),

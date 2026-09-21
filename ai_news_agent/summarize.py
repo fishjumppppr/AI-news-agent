@@ -18,6 +18,7 @@ def build_prompt(items: List[NewsItem], report_date: str) -> str:
                 [
                     f"[{index}] {item.title}",
                     f"source: {item.source}",
+                    f"source_type: {item.source_type}",
                     f"published: {published}",
                     f"url: {item.url}",
                     f"summary: {item.summary[:800]}",
@@ -30,6 +31,7 @@ def build_prompt(items: List[NewsItem], report_date: str) -> str:
 
 要求：
 - 优先选择 AI agent、tool use、computer use、coding agent、MCP、RAG/workflow、多智能体、重要模型/平台发布、开源项目、论文和产业动态。
+- 保持来源均衡：今日要点不要全部来自同一类来源；优先混合官方发布、新闻报道、开源项目、社区讨论/论文。
 - 不要编造；如果来源信息不足，请明确说信息不足。
 - 每条新闻都要带来源链接。
 - 明确区分事实、推测和传闻。

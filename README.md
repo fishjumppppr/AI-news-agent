@@ -143,6 +143,7 @@ crontab -e
 - `github_search`：用 GitHub Search API 搜索近期更新的 AI/LLM agent 项目。
 - `weight`：只影响候选排序（权重高的排前面），不改变抓取范围。
 - 抓取结果只是候选，还要过 `config/settings.yaml` 的日期窗口（`lookback_days`）和 `keywords` 过滤；标题、摘要、正文都不含关键词的条目会被丢弃。
+- 为避免日报被单一来源刷屏，候选池会按 `max_items_per_source` 和 `max_items_per_source_type` 做配额控制；宁可少给候选，也不让 GitHub 或 Google News 这类单类来源占满日报。
 - Bing News Search 需要 Azure API key，`.env.example` 已预留 `BING_NEWS_API_KEY`，默认未启用。
 
 ## 5. 修改来源

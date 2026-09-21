@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from collections import Counter
 from typing import Iterable, List
 
 from .fetch import NewsItem
@@ -18,6 +19,8 @@ def filter_items(
     window_end: datetime,
     keywords: List[str],
     max_items: int,
+    max_items_per_source: int,
+    max_items_per_source_type: int,
 ) -> List[NewsItem]:
     seen = set()
     filtered: List[NewsItem] = []
@@ -41,4 +44,19 @@ def filter_items(
         ),
         reverse=False,
     )
-    return filtered[:max_items]
+
+    selected: List[NewsItem] = []
+    source_counts: Counter[str] = Counter()
+    type_counts: Counter[str] = Counter()
+    for item in filtered:
+        if (
+            source_counts[item.source] < max_items_per_source
+            and type_counts[item.source_type] < max_items_per_source_type
+        ):
+            selected.append(item)
+            source_counts[item.source] += 1
+            type_counts[item.source_type] += 1
+        if len(selected) >= max_items:
+            return selected
+
+    return selected
